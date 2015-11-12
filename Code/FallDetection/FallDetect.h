@@ -4,13 +4,12 @@
 #include "FallDetectionDLL_Config.h"
 
 #include "api_definitions.h"
-
+#include "MLPClass.h"
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <deque>
 
-//#include "PhidgetSensorEventDetection.h"
 #include <timestamp.hpp>
 #include <limits>
 #include "FuzzyLite.h"
@@ -26,12 +25,14 @@ public:
 	FallDetect();
 	~FallDetect();
 	
-	void startMonitoringForAccelerometer(std::string subjectStoringPath_str);
+	/*void startMonitoringForAccelerometer(std::string subjectStoringPath_str);
 	void startRecordingForAccelerometer(std::string subjectStoringPath_str);
 	void setAccelerometerTrackerOff() {m_bAccelerometerTrackerStopped = true;};
-	//void setAccelerometerRecorderOff() {m_bAccelerometerRecorderStopped = true;};
+	void setAccelerometerRecorderOff() {m_bAccelerometerRecorderStopped = true;};*/
 
-	bool checkUsersStatus(double xVal, double yVal, double zVal);//, Timestamp tmpStmp);
+	bool detectFall(std::string storedMLPPath);
+
+	bool checkUsersStatus(double xVal, double yVal, double zVal, Timestamp tmpStmp);
 	std::deque<double> calcAll_Offline(std::deque<std::deque<double>> inputData_deq, std::deque<std::deque<double>> inputTime_deq);
 
 	std::deque<double> readDataFromFile_1Ddeq(std::string filenamePath, bool bPopBackLastCol=true);
@@ -41,17 +42,25 @@ public:
 	std::deque< std::deque<double> > convertRawsToColumns(std::deque< std::deque<double> > inputMatrix_deq);
 
 	bool isMovementUpdated(){return bIsMovementUpdated;};
+	bool isVectorsAreUpdated(){return m_bVectorsAreUpdated;};
+	void setVectorsAreUpdated() {m_bVectorsAreUpdated = true;};
+
 	
 	std::deque<double> getMovement_deq() {return m_movement_deq;};
 
 	fl::flScalar doFIS(fl::flScalar in_sma, fl::flScalar in_deltaTheta, fl::flScalar in_deltaPhi);
+
+	double getR() {return m_r;};
+	double getDeltaPhi() {return m_deltaThetaDer;};
+	double getDeltaTheta() {return m_deltaPhiDer;};
+	Timestamp getTimestamp() {return m_tmpStmp;};
 
 private:
 	
 	static int RunInThreadAccelerometerTracker(void* pv_Para);
 	static int RunInThreadAccelerometerRecorder(void* pv_Para);
 
-	bool calcAll(double xVal, double yVal, double zVal);//, Timestamp tmpStmp);
+	bool calcAll(double xVal, double yVal, double zVal, Timestamp tmpStmp);
 
 	std::deque<double> getPSDFFT3W(std::deque< std::deque<double> > inputData_vec, int startingIndex, int windowSize, int sampling);
 
@@ -59,7 +68,9 @@ private:
 	double getAccelYVal();
 	double getAccelZVal();*/
 
-	bool updateAccelValues(double xVal,double yVal,double zVal);//, Timestamp tmpStmp);
+	int countOnes(std::deque<int> inDeq);
+
+	bool updateAccelValues(double xVal,double yVal,double zVal, Timestamp tmpStmp);
 
 	static bool calc(){return false;};
 
@@ -70,11 +81,9 @@ private:
 	bool calcDeltaThetaDer();
 	//bool calcSMA();
 
-	double getR() {return m_r;};
+	
 	double getPhi() {return m_theta;};
-	double getDeltaPhi() {return m_deltaThetaDer;};
 	double getTheta() {return m_phi;};
-	double getDeltaTheta() {return m_deltaPhiDer;};
 	double getSMA() {return m_sma;};
 
 	double getCurrentSMA() {return m_current_sma;};
@@ -169,6 +178,7 @@ private:
 	double m_dSma_secondBuffer;
 
 	std::deque<double> m_movement_deq;
+	std::deque<int> m_finalMLP_decision_deq;
 	//Flood::Vector<double> m_mlpOutput_deq;
 
 	bool m_bAccelerometerTrackerStopped;

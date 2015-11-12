@@ -13,7 +13,6 @@ MLPClass::MLPClass()
 {
 	//----------------------------------------------------------------------------------------------------------------------
 	m_openCV_MLP = NULL;	//MLP variable
-	InitFromIni(FILEPATH_MLP_INIFILE);
 }
 
 
@@ -26,22 +25,6 @@ MLPClass::~MLPClass()
 	}
 }
 
-bool MLPClass::InitFromIni(std::string iniFilePath)
-{
-	USES_CONVERSION;
-
-	/*CIniFile iniFile(A2W(iniFilePath.c_str()), 1024);
-
-	mlpParams.mlp_threshold_val = iniFile.GetFloat(_T("MLP"), _T("MLP_THRESHOLD_VAL"), 1.0);
-	mlpParams.mlp_decisions_size = iniFile.GetInt(_T("MLP"), _T("MLP_DECISIONS_SIZE"), 120);
-	mlpParams.mlp_decisions_threshold_val = iniFile.GetInt(_T("MLP"), _T("MLP_DECISIONS_THRESHOLD_VAL"), 90);*/
-
-	mlpParams.mlp_threshold_val = 1.0;
-	mlpParams.mlp_decisions_size = 120;
-	mlpParams.mlp_decisions_threshold_val = 50;
-
-	return true;
-}
 
 std::deque< std::deque<double> > MLPClass::convertRawsToColumns(std::deque< std::deque<double> > inputMatrix_deq)
 {

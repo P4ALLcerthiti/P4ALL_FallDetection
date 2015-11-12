@@ -1,5 +1,3 @@
-// Test3.cpp : Defines the entry point for the console application.
-//
 #include "stdafx.h"
 #include "api_definitions.h"
 #include "PhidgetSensorEventDetection.h"
@@ -210,15 +208,11 @@ bool createSignature(std::string inputDataSet, std::string inputResultsDataSet)
 {
 	MLPClass* m_mlp = new MLPClass();
 	std::string logFilePath = ".\\..\\" ;
-	logFilePath.append(FOLDERNAME_LOG);
+	logFilePath.append(FOLDERNAME_MLP);
 
 	boost::filesystem::path dir(logFilePath);
 	boost::filesystem::create_directory(dir);
 
-	boost::filesystem::create_directory(dir / "MLP");
-
-	logFilePath.append("\\");
-	logFilePath.append(FOLDERNAME_MLP);
 	logFilePath.append("\\");
 
 	if(_access(inputDataSet.c_str(),0)==-1)
@@ -264,12 +258,17 @@ bool createSignature(std::string inputDataSet, std::string inputResultsDataSet)
 int _tmain(int argc, _TCHAR* argv[])
 {
 
-	std::string anglesFile = "..\\angles.txt";
-	std::string tmpstmpFile = "..\\index.ini";
+	std::string anglesFile = "C:\\angles.txt";
+	std::string tmpstmpFile = "C:\\index.ini";
 
-	std::string pathToAllTrainingData = "..\\allTrainingData.txt";
-	std::string pathToAllTrainingDataResults = "..\\allTrainingDataResults.txt";
+	std::string pathToAllTrainingData = "C:\\allTrainingData.txt";
+	std::string pathToAllTrainingDataResults = "C:\\allTrainingDataResults.txt";
 
+	/*
+		If the given files describe a fall, give action the value of 1 (action=1)
+		If the given files don't describe a fall, give action the value of 0 (action=0)
+	*/
+	
 	addFilesForSignature(anglesFile, tmpstmpFile, 0);
 
 	mergeTrainingData();

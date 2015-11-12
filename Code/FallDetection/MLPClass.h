@@ -14,15 +14,6 @@
 #include <cv.h>       // opencv general include file
 #include <ml.h>		  // opencv machine learning include file
 
-class FALLDETECTIONDLLAPIS MLPParams
-{
-public:
-
-	double mlp_threshold_val;
-	int	mlp_decisions_size;
-	int	mlp_decisions_threshold_val;
-	
-};
 
 class FALLDETECTIONDLLAPIS MLPClass
 {
@@ -42,7 +33,6 @@ public:
 
 	bool loadNewMLP(std::string storedMLPPath);
 
-	MLPParams mlpParams;
 	
 private:
 	//OpenCV Multi Layer Perceptron
@@ -52,5 +42,5 @@ private:
 	std::deque<std::deque<double> > readDataFromFile_2Ddeq(std::string filenamePath, bool bPopBackLastCol=true);
 	void storeAngles2D_deq(std::deque< std::deque<double>> input_vec, std::string outputPath_cstr, bool bInsertIndex=false);
 	std::deque< std::deque<double> > convertRawsToColumns(std::deque< std::deque<double> > inputMatrix_deq);
-	bool InitFromIni(std::string iniFilePath);
+	//bool InitFromIni(std::string iniFilePath);
 };

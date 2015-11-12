@@ -4,6 +4,7 @@
  * \author Joachim Neumann <joachim@gps.tsc.upc.edu>
  * \date 18-Feb-2005
  */
+#define WIN32_LEAN_AND_MEAN
 
 #ifndef TIMESTAMP_HPP
 #define TIMESTAMP_HPP

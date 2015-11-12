@@ -1,24 +1,15 @@
 #include "stdafx.h"
 
 #include "FallDetect.h"
-//#include "IniFile.h"
-
 
 #include <iomanip>
 #include <math.h>
 
-//#include <boost\thread.hpp>
-//#include <boost\bind.hpp>
-//#include <boost\thread\thread.hpp>
-//#include <boost\bind\bind.hpp>
-
 #include <iostream>
-//#include <thread.hpp>
-//#include <bind.hpp>
 
-extern "C" {
-#include "fftw3.h"
-};
+//extern "C" {
+//#include "fftw3.h"
+//};
 #include "fasttransforms.h"
 
 //#include "Vector.h"
@@ -162,6 +153,11 @@ FallDetect::FallDetect()
 
 	m_movement_deq.clear();
 	m_movement_deq.resize(OBSERVATION_FALL_TIME_IN_SECS*ACCELEROMETER_FREQUENCY);
+
+	
+	m_finalMLP_decision_deq.clear();
+	m_finalMLP_decision_deq.resize(MLP_DECISIONS_SIZE);
+	
 }
 
 
@@ -198,111 +194,109 @@ FallDetect::~FallDetect()
 	m_intCounter = 0;
 
 	m_movement_deq.clear();
-
+	m_finalMLP_decision_deq.clear();
 	delete m_fuzzyEngine;
 }
 
 
 
-void FallDetect::startRecordingForAccelerometer(std::string subjectStoringPath_str)
-{
-	USES_CONVERSION;
-
-	//Accelerometer Subfolders
-	std::string accelerometer_TimestampStoringPath_cstr;
-	std::string accelerometer_StoringPath_cstr = subjectStoringPath_str;
-	/*if(m_bAccelerometer_Initialized)
-	{*/
-		accelerometer_TimestampStoringPath_cstr = accelerometer_StoringPath_cstr;
-
-		accelerometer_StoringPath_cstr.append(FILENAME_ACCELEROMETER_ANGLES);
-		accelerometer_TimestampStoringPath_cstr.append(FILENAME_TIMESTAMP);
-	//}
-
-	m_bAccelerometerRecorderStopped = false;
-
-	m_ofs_data.open(accelerometer_StoringPath_cstr);
-	m_ofs_timestamp.open(accelerometer_TimestampStoringPath_cstr);
-
-	RunInThreadAccelerometerRecorder(this);
-
-	//boost::thread t(boost::bind(&FallDetect::RunInThreadAccelerometerRecorder, this));
-
-	//boost::thread t(calc);
-
-	//if(m_hThreadAccelerometerRecorder==NULL)
-	//{
-	//	/*if(m_bAccelerometer_Initialized)
-	//	{*/
-	//		m_ofs_data.open(accelerometer_StoringPath_cstr);
-	//		m_ofs_timestamp.open(accelerometer_TimestampStoringPath_cstr);
-	//	//}
-
-	//	m_hThreadAccelerometerRecorder = AfxBeginThread(AFX_THREADPROC(RunInThreadAccelerometerRecorder), 
-	//		this,
-	//		(int)THREAD_PRIORITY_BELOW_NORMAL, //THREAD_PRIORITY_NORMAL
-	//		0,
-	//		CREATE_SUSPENDED, 
-	//		0);
-	//	
-	//	m_hThreadAccelerometerRecorder->m_bAutoDelete = TRUE;
-	//	m_hThreadAccelerometerRecorder->ResumeThread();
-	//	
-	//}
-
-	//return true;
-}
-
-
-void FallDetect::startMonitoringForAccelerometer(std::string subjectStoringPath_str)
-{
-	USES_CONVERSION;
-
-	//if(!m_bAccelerometer_Initialized)
-	//{
-	//	//AddUIString(_T("Accelerometer has to be initialized first..."));
-	//	return false;
-	//}
-
-	//Accelerometer Subfolders
-	std::string accelerometer_TimestampStoringPath_cstr;
-	std::string accelerometer_StoringPath_cstr = subjectStoringPath_str.c_str();
-	/*if(m_bAccelerometer_Initialized)
-	{*/		
-		accelerometer_TimestampStoringPath_cstr = accelerometer_StoringPath_cstr;
-
-		accelerometer_StoringPath_cstr.append(FILENAME_ACCELEROMETER_ANGLES);
-		accelerometer_TimestampStoringPath_cstr.append(FILENAME_TIMESTAMP);
-	//}
-
-	m_bAccelerometerTrackerStopped = false;	
-
-	m_ofs_data.open(accelerometer_StoringPath_cstr);
-	m_ofs_timestamp.open(accelerometer_TimestampStoringPath_cstr);
-
-	//boost::thread thrd(&RunInThreadAccelerometerTracker);
-
-	//if(m_hThreadAccelerometerTracker==NULL)
-	//{
-	//	/*if(m_bAccelerometer_Initialized)
-	//	{*/
-	//		m_ofs_data.open(accelerometer_StoringPath_cstr);
-	//		m_ofs_timestamp.open(accelerometer_TimestampStoringPath_cstr);
-	//	//}		
-
-	//	m_hThreadAccelerometerTracker = AfxBeginThread(AFX_THREADPROC(RunInThreadAccelerometerTracker), 
-	//		this,
-	//		(int)THREAD_PRIORITY_BELOW_NORMAL, //THREAD_PRIORITY_NORMAL
-	//		0,
-	//		CREATE_SUSPENDED, 
-	//		0);
-	//	
-	//	m_hThreadAccelerometerTracker->m_bAutoDelete = TRUE;
-	//	m_hThreadAccelerometerTracker->ResumeThread();
-	//}
-
-	//return true;
-}
+//void FallDetect::startRecordingForAccelerometer(std::string subjectStoringPath_str)
+//{
+//	USES_CONVERSION;
+//
+//	//Accelerometer Subfolders
+//	std::string accelerometer_TimestampStoringPath_cstr;
+//	std::string accelerometer_StoringPath_cstr = subjectStoringPath_str;
+//	/*if(m_bAccelerometer_Initialized)
+//	{*/
+//		accelerometer_TimestampStoringPath_cstr = accelerometer_StoringPath_cstr;
+//
+//		accelerometer_StoringPath_cstr.append(FILENAME_ACCELEROMETER_ANGLES);
+//		accelerometer_TimestampStoringPath_cstr.append(FILENAME_TIMESTAMP);
+//	//}
+//
+//	m_bAccelerometerRecorderStopped = false;
+//
+//	m_ofs_data.open(accelerometer_StoringPath_cstr);
+//	m_ofs_timestamp.open(accelerometer_TimestampStoringPath_cstr);
+//
+//	RunInThreadAccelerometerRecorder(this);
+//
+//	//if(m_hThreadAccelerometerRecorder==NULL)
+//	//{
+//	//	/*if(m_bAccelerometer_Initialized)
+//	//	{*/
+//	//		m_ofs_data.open(accelerometer_StoringPath_cstr);
+//	//		m_ofs_timestamp.open(accelerometer_TimestampStoringPath_cstr);
+//	//	//}
+//
+//	//	m_hThreadAccelerometerRecorder = AfxBeginThread(AFX_THREADPROC(RunInThreadAccelerometerRecorder), 
+//	//		this,
+//	//		(int)THREAD_PRIORITY_BELOW_NORMAL, //THREAD_PRIORITY_NORMAL
+//	//		0,
+//	//		CREATE_SUSPENDED, 
+//	//		0);
+//	//	
+//	//	m_hThreadAccelerometerRecorder->m_bAutoDelete = TRUE;
+//	//	m_hThreadAccelerometerRecorder->ResumeThread();
+//	//	
+//	//}
+//
+//	//return true;
+//}
+//
+//
+//void FallDetect::startMonitoringForAccelerometer(std::string subjectStoringPath_str)
+//{
+//	USES_CONVERSION;
+//
+//	//if(!m_bAccelerometer_Initialized)
+//	//{
+//	//	//AddUIString(_T("Accelerometer has to be initialized first..."));
+//	//	return false;
+//	//}
+//
+//	//Accelerometer Subfolders
+//	std::string accelerometer_TimestampStoringPath_cstr;
+//	std::string accelerometer_StoringPath_cstr = subjectStoringPath_str.c_str();
+//	/*if(m_bAccelerometer_Initialized)
+//	{*/		
+//		accelerometer_TimestampStoringPath_cstr = accelerometer_StoringPath_cstr;
+//
+//		accelerometer_StoringPath_cstr.append(FILENAME_ACCELEROMETER_ANGLES);
+//		accelerometer_TimestampStoringPath_cstr.append(FILENAME_TIMESTAMP);
+//	//}
+//
+//	m_bAccelerometerTrackerStopped = false;	
+//
+//	m_ofs_data.open(accelerometer_StoringPath_cstr);
+//	m_ofs_timestamp.open(accelerometer_TimestampStoringPath_cstr);
+//
+//	RunInThreadAccelerometerTracker(this);
+//
+//	//boost::thread thrd(&RunInThreadAccelerometerTracker);
+//
+//	//if(m_hThreadAccelerometerTracker==NULL)
+//	//{
+//	//	/*if(m_bAccelerometer_Initialized)
+//	//	{*/
+//	//		m_ofs_data.open(accelerometer_StoringPath_cstr);
+//	//		m_ofs_timestamp.open(accelerometer_TimestampStoringPath_cstr);
+//	//	//}		
+//
+//	//	m_hThreadAccelerometerTracker = AfxBeginThread(AFX_THREADPROC(RunInThreadAccelerometerTracker), 
+//	//		this,
+//	//		(int)THREAD_PRIORITY_BELOW_NORMAL, //THREAD_PRIORITY_NORMAL
+//	//		0,
+//	//		CREATE_SUSPENDED, 
+//	//		0);
+//	//	
+//	//	m_hThreadAccelerometerTracker->m_bAutoDelete = TRUE;
+//	//	m_hThreadAccelerometerTracker->ResumeThread();
+//	//}
+//
+//	//return true;
+//}
 
 
 //double FallDetect::getAccelXVal()
@@ -344,10 +338,10 @@ void FallDetect::startMonitoringForAccelerometer(std::string subjectStoringPath_
 //}
 
 
-bool FallDetect::updateAccelValues(double xVal,double yVal,double zVal)//, Timestamp tmpStmp)
+bool FallDetect::updateAccelValues(double xVal,double yVal,double zVal, Timestamp tmpStmp)
 {
-	m_tmpStmp = systemTime();
-	//m_tmpStmp = tmpStmp;
+	//m_tmpStmp = systemTime();
+	m_tmpStmp = tmpStmp;
 	m_accel_x = xVal;
 	m_accel_y = yVal;
 	m_accel_z = zVal;
@@ -750,7 +744,7 @@ std::deque<double> FallDetect::calcAll_Offline(std::deque<std::deque<double>> in
 }
 
 
-bool FallDetect::calcAll(double xVal, double yVal, double zVal)//, Timestamp tmpStmp)
+bool FallDetect::calcAll(double xVal, double yVal, double zVal, Timestamp tmpStmp)
 {
 	USES_CONVERSION;
 
@@ -758,7 +752,7 @@ bool FallDetect::calcAll(double xVal, double yVal, double zVal)//, Timestamp tmp
 
 	if(ENABLE_PLOT_R+ENABLE_PLOT_THETA+ENABLE_PLOT_DELTA_THETA+ENABLE_PLOT_PHI+ENABLE_PLOT_DELTA_PHI+ENABLE_PLOT_SMA+ENABLE_PLOT_MOVEMENT>0)
 	{
-		updateAccelValues(xVal,yVal,zVal);//,tmpStmp);
+		updateAccelValues(xVal,yVal,zVal,tmpStmp);
 	}
 	if(ENABLE_PLOT_R+ENABLE_PLOT_SMA+ENABLE_PLOT_MOVEMENT>0)
 	{
@@ -949,7 +943,7 @@ bool FallDetect::calcAll(double xVal, double yVal, double zVal)//, Timestamp tmp
 
 
 
-bool FallDetect::checkUsersStatus(double xVal, double yVal, double zVal)//, Timestamp tmpStmp)
+bool FallDetect::checkUsersStatus(double xVal, double yVal, double zVal, Timestamp tmpStmp)
 {
 	m_psdFreq_deq.clear();
 	//m_proportions_deq.clear();
@@ -960,7 +954,7 @@ bool FallDetect::checkUsersStatus(double xVal, double yVal, double zVal)//, Time
 		return false;
 	}
 
-	calcAll(xVal, yVal, zVal);//, tmpStmp);
+	calcAll(xVal, yVal, zVal, tmpStmp);
 
 	//if(ENABLE_PLOT_PSD>0)
 	//{
@@ -1023,6 +1017,62 @@ bool FallDetect::checkUsersStatus(double xVal, double yVal, double zVal)//, Time
 	return true;
 }
 
+int FallDetect::countOnes(std::deque<int> inDeq)
+{
+	int onesSum = 0;
+	for(int i=0; i<inDeq.size(); i++)
+	{
+		if(inDeq[i]==1)
+		{
+			onesSum++;
+		}
+	}
+
+	return onesSum;
+}
+
+bool FallDetect::detectFall(std::string storedMLPPath)
+{
+	int iTimesDecidedFallen = 0;
+	double mlpVal =0.0;
+	bool bHasFallen = false;
+	bool fall = false;
+
+	MLPClass* mlp = new MLPClass();
+	mlp->loadNewMLP(storedMLPPath);
+	bHasFallen = mlp->checkPattern(getMovement_deq(), mlpVal, MLP_THRESHOLD_VAL);
+
+	if(bHasFallen)
+	{
+		m_finalMLP_decision_deq.push_back(1);
+		m_finalMLP_decision_deq.pop_front();
+	}
+	else
+	{
+		m_finalMLP_decision_deq.push_back(0);
+		m_finalMLP_decision_deq.pop_front();
+	}
+
+	cout << mlpVal << "\n";
+
+	iTimesDecidedFallen = countOnes(m_finalMLP_decision_deq);
+	if(iTimesDecidedFallen > MLP_DCISIONS_THRESHOLD_VAL)
+	{
+		fall = true;
+	}
+	else
+	{
+		fall = false;
+	}
+
+	if(mlp!=NULL)
+	{
+		delete mlp;
+		mlp = NULL;
+	}
+
+	return fall;
+}
 
 std::deque< std::deque<double> > FallDetect::convertRawsToColumns(std::deque< std::deque<double> > inputMatrix_deq)
 {
@@ -1053,80 +1103,80 @@ std::deque< std::deque<double> > FallDetect::convertRawsToColumns(std::deque< st
 }
 
 
-std::deque<double> FallDetect::getPSDFFT3W(std::deque< std::deque<double> > inputData_deq, int startingIndex, int windowSize, int sampling)
-{
-	std::deque<double> psd_deq;
-
-	if(startingIndex+windowSize>inputData_deq.size())
-	{
-		return psd_deq;
-	}
-
-	fftw_complex *inpX, *outX, *inpY, *outY, *inpZ, *outZ;
-	fftw_plan pX, pY, pZ;
-
-	int N = sampling;
-
-	inpX = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-	outX = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-	inpY = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-	outY = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-	inpZ = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-	outZ = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
-
-	for (int i = 0; i < windowSize; ++i)
-	{
-		inpX[i][0] = inputData_deq[startingIndex+i][0];
-		inpX[i][1] = 0.;
-
-		inpY[i][0] = inputData_deq[startingIndex+i][1];
-		inpY[i][1] = 0.;
-
-		inpZ[i][0] = inputData_deq[startingIndex+i][2];
-		inpZ[i][1] = 0.;
-	}
-	for (int i=windowSize; i<N; i++)
-	{
-		inpX[i][0] = 0.;
-		inpX[i][1] = 0.;
-		inpY[i][0] = 0.;
-		inpY[i][1] = 0.;
-		inpZ[i][0] = 0.;
-		inpZ[i][1] = 0.;
-	}
-
-	pX = fftw_plan_dft_1d(N, inpX, outX, FFTW_FORWARD, FFTW_ESTIMATE);
-	pY = fftw_plan_dft_1d(N, inpY, outY, FFTW_FORWARD, FFTW_ESTIMATE);
-	pZ = fftw_plan_dft_1d(N, inpZ, outZ, FFTW_FORWARD, FFTW_ESTIMATE);
-
-	fftw_execute(pX); /* repeat as needed */
-	fftw_execute(pY); /* repeat as needed */
-	fftw_execute(pZ); /* repeat as needed */
-
-	std::deque< std::deque<double> > pFrequency_deq;
-	pFrequency_deq.resize(N);
-	psd_deq.resize(N);
-	for(int i = 0; i < N; i++)
-	{
-		pFrequency_deq[i].resize(inputData_deq[0].size()+1);
-		pFrequency_deq[i][0] = sqrt(outX[i][0]*outX[i][0] + outX[i][1]*outX[i][1]);//*0.39894228040143267793994605993438;
-		pFrequency_deq[i][1] = sqrt(outY[i][0]*outY[i][0] + outY[i][1]*outY[i][1]);//*0.39894228040143267793994605993438;
-		pFrequency_deq[i][2] = sqrt(outZ[i][0]*outZ[i][0] + outZ[i][1]*outZ[i][1]);//*0.39894228040143267793994605993438;
-		psd_deq[i] = (pFrequency_deq[i][0] + pFrequency_deq[i][1] + pFrequency_deq[i][2])/3;
-	}
-
-	fftw_destroy_plan(pX);
-	fftw_destroy_plan(pY);
-	fftw_destroy_plan(pZ);
-	fftw_free(inpX);
-	fftw_free(outX);
-	fftw_free(inpY);
-	fftw_free(outY);
-	fftw_free(inpZ);
-	fftw_free(outZ);
-
-	return psd_deq;
-}
+//std::deque<double> FallDetect::getPSDFFT3W(std::deque< std::deque<double> > inputData_deq, int startingIndex, int windowSize, int sampling)
+//{
+//	std::deque<double> psd_deq;
+//
+//	if(startingIndex+windowSize>inputData_deq.size())
+//	{
+//		return psd_deq;
+//	}
+//
+//	fftw_complex *inpX, *outX, *inpY, *outY, *inpZ, *outZ;
+//	fftw_plan pX, pY, pZ;
+//
+//	int N = sampling;
+//
+//	inpX = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+//	outX = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+//	inpY = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+//	outY = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+//	inpZ = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+//	outZ = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+//
+//	for (int i = 0; i < windowSize; ++i)
+//	{
+//		inpX[i][0] = inputData_deq[startingIndex+i][0];
+//		inpX[i][1] = 0.;
+//
+//		inpY[i][0] = inputData_deq[startingIndex+i][1];
+//		inpY[i][1] = 0.;
+//
+//		inpZ[i][0] = inputData_deq[startingIndex+i][2];
+//		inpZ[i][1] = 0.;
+//	}
+//	for (int i=windowSize; i<N; i++)
+//	{
+//		inpX[i][0] = 0.;
+//		inpX[i][1] = 0.;
+//		inpY[i][0] = 0.;
+//		inpY[i][1] = 0.;
+//		inpZ[i][0] = 0.;
+//		inpZ[i][1] = 0.;
+//	}
+//
+//	pX = fftw_plan_dft_1d(N, inpX, outX, FFTW_FORWARD, FFTW_ESTIMATE);
+//	pY = fftw_plan_dft_1d(N, inpY, outY, FFTW_FORWARD, FFTW_ESTIMATE);
+//	pZ = fftw_plan_dft_1d(N, inpZ, outZ, FFTW_FORWARD, FFTW_ESTIMATE);
+//
+//	fftw_execute(pX); /* repeat as needed */
+//	fftw_execute(pY); /* repeat as needed */
+//	fftw_execute(pZ); /* repeat as needed */
+//
+//	std::deque< std::deque<double> > pFrequency_deq;
+//	pFrequency_deq.resize(N);
+//	psd_deq.resize(N);
+//	for(int i = 0; i < N; i++)
+//	{
+//		pFrequency_deq[i].resize(inputData_deq[0].size()+1);
+//		pFrequency_deq[i][0] = sqrt(outX[i][0]*outX[i][0] + outX[i][1]*outX[i][1]);//*0.39894228040143267793994605993438;
+//		pFrequency_deq[i][1] = sqrt(outY[i][0]*outY[i][0] + outY[i][1]*outY[i][1]);//*0.39894228040143267793994605993438;
+//		pFrequency_deq[i][2] = sqrt(outZ[i][0]*outZ[i][0] + outZ[i][1]*outZ[i][1]);//*0.39894228040143267793994605993438;
+//		psd_deq[i] = (pFrequency_deq[i][0] + pFrequency_deq[i][1] + pFrequency_deq[i][2])/3;
+//	}
+//
+//	fftw_destroy_plan(pX);
+//	fftw_destroy_plan(pY);
+//	fftw_destroy_plan(pZ);
+//	fftw_free(inpX);
+//	fftw_free(outX);
+//	fftw_free(inpY);
+//	fftw_free(outY);
+//	fftw_free(inpZ);
+//	fftw_free(outZ);
+//
+//	return psd_deq;
+//}
 
 double FallDetect::getMean(std::deque<double> sequence)
 {
