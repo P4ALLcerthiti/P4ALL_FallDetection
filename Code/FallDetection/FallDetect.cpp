@@ -224,6 +224,8 @@ void FallDetect::startRecordingForAccelerometer(std::string subjectStoringPath_s
 	m_ofs_data.open(accelerometer_StoringPath_cstr);
 	m_ofs_timestamp.open(accelerometer_TimestampStoringPath_cstr);
 
+	RunInThreadAccelerometerRecorder(this);
+
 	//boost::thread t(boost::bind(&FallDetect::RunInThreadAccelerometerRecorder, this));
 
 	//boost::thread t(calc);
@@ -1346,129 +1348,129 @@ bool FallDetect::isIndeterminate(double pv)
 }
 
 
-//std::deque<double> FallDetect::readDataFromFile_1Ddeq(CString filenamePath, bool bPopBackLastCol/*=true*/)
-//{
-//	std::ifstream inputFile;
-//	inputFile.open(CT2A(filenamePath), std::ifstream::in);
-//	if (inputFile.is_open())
-//	{
-//		std::string useless, number;
-//		size_t middlePoint1 , previousMiddlePoint;
-//		double numberD = 0.0;
-//		int flag = 0;
-//
-//		inputFile.seekg(0, std::ios_base::beg);
-//
-//		std::deque<double> feature_vector;
-//
-//		getline(inputFile, useless);
-//		do{
-//			number = useless.substr(0, useless.size());
-//
-//			numberD = atof(number.c_str());
-//			feature_vector.push_back((numberD));
-//
-//		}while(getline(inputFile, useless));
-//
-//		inputFile.close();
-//
-//		return feature_vector;
-//	}
-//}
-//
-//
-//std::deque<std::deque<double> > FallDetect::readDataFromFile_2Ddeq(CString filenamePath, bool bPopBackLastCol/*=true*/)
-//{
-//	std::ifstream inputFile;
-//	inputFile.open(CT2A(filenamePath), std::ifstream::in);
-//	if (inputFile.is_open()){
-//		std::string useless, number;
-//		size_t middlePoint1 , previousMiddlePoint;
-//		double numberD = 0.0;
-//		int flag = 0;
-//
-//		inputFile.seekg(0, std::ios_base::beg);
-//
-//		std::deque < std::deque<double> > feature_vector;
-//
-//		getline(inputFile, useless);
-//		do{
-//			std::deque<double> lineDeqeue;
-//			flag = 0;
-//			do{
-//
-//				middlePoint1 = useless.find_first_of("\t");
-//				previousMiddlePoint = useless.find_last_of("\t");
-//				if(middlePoint1 == previousMiddlePoint)
-//					flag++;
-//
-//				number = useless.substr(0, middlePoint1);
-//
-//				numberD = atof(number.c_str());
-//				useless = useless.substr(middlePoint1+1, useless.length());
-//				lineDeqeue.push_back((numberD));
-//
-//			}while(flag != 2);
-//			if(bPopBackLastCol)
-//			{
-//				lineDeqeue.pop_back();
-//			}
-//
-//			feature_vector.push_back(lineDeqeue);
-//
-//		}while(getline(inputFile, useless));
-//
-//		inputFile.close();
-//
-//		return feature_vector;
-//	}
-//}
-//
-//void FallDetect::storeAngles1D_deq(std::deque<double> input_vec, CString outputPath_cstr, bool bInsertIndex/*=false*/)
-//{
-//	ofstream ofs;
-//	ofs.open(outputPath_cstr);
-//
-//	for(int i=0; i<input_vec.size(); i++){
-//		if(bInsertIndex)
-//		{
-//			ofs << i;
-//			ofs << "\t";
-//		}
-//		ofs << input_vec[i];
-//		if(i!=input_vec.size()-1)
-//		{
-//			ofs << "\n";
-//		}
-//	}
-//
-//	ofs.close();
-//	ofs.clear();
-//}
-//
-//
-//void FallDetect::storeAngles2D_deq(std::deque< std::deque<double>> input_vec, CString outputPath_cstr, bool bInsertIndex/*=false*/)
-//{
-//	std::ofstream ofs;
-//	ofs.open(outputPath_cstr);
-//
-//	for(int i=0; i<input_vec.size(); i++){
-//		if(bInsertIndex)
-//		{
-//			ofs << i;
-//			ofs << "\t";
-//		}
-//		for(int j=0; j<input_vec[i].size(); j++){
-//			ofs << input_vec[i][j];
-//			ofs << "\t";
-//		}
-//
-//		if(i<input_vec.size()-1)
-//		{
-//			ofs << std::endl;
-//		}
-//	}
-//
-//	ofs.close();
-//	ofs.clear();
-//}
+std::deque<double> FallDetect::readDataFromFile_1Ddeq(std::string filenamePath, bool bPopBackLastCol/*=true*/)
+{
+	std::ifstream inputFile;
+	inputFile.open(filenamePath, std::ifstream::in);
+	if (inputFile.is_open())
+	{
+		std::string useless, number;
+		size_t middlePoint1 , previousMiddlePoint;
+		double numberD = 0.0;
+		int flag = 0;
+
+		inputFile.seekg(0, std::ios_base::beg);
+
+		std::deque<double> feature_vector;
+
+		getline(inputFile, useless);
+		do{
+			number = useless.substr(0, useless.size());
+
+			numberD = atof(number.c_str());
+			feature_vector.push_back((numberD));
+
+		}while(getline(inputFile, useless));
+
+		inputFile.close();
+
+		return feature_vector;
+	}
+}
+
+
+std::deque<std::deque<double> > FallDetect::readDataFromFile_2Ddeq(std::string filenamePath, bool bPopBackLastCol/*=true*/)
+{
+	std::ifstream inputFile;
+	inputFile.open(filenamePath, std::ifstream::in);
+	if (inputFile.is_open()){
+		std::string useless, number;
+		size_t middlePoint1 , previousMiddlePoint;
+		double numberD = 0.0;
+		int flag = 0;
+
+		inputFile.seekg(0, std::ios_base::beg);
+
+		std::deque < std::deque<double> > feature_vector;
+
+		getline(inputFile, useless);
+		do{
+			std::deque<double> lineDeqeue;
+			flag = 0;
+			do{
+
+				middlePoint1 = useless.find_first_of("\t");
+				previousMiddlePoint = useless.find_last_of("\t");
+				if(middlePoint1 == previousMiddlePoint)
+					flag++;
+
+				number = useless.substr(0, middlePoint1);
+
+				numberD = atof(number.c_str());
+				useless = useless.substr(middlePoint1+1, useless.length());
+				lineDeqeue.push_back((numberD));
+
+			}while(flag != 2);
+			if(bPopBackLastCol)
+			{
+				lineDeqeue.pop_back();
+			}
+
+			feature_vector.push_back(lineDeqeue);
+
+		}while(getline(inputFile, useless));
+
+		inputFile.close();
+
+		return feature_vector;
+	}
+}
+
+void FallDetect::storeAngles1D_deq(std::deque<double> input_vec, std::string outputPath_cstr, bool bInsertIndex/*=false*/)
+{
+	ofstream ofs;
+	ofs.open(outputPath_cstr);
+
+	for(int i=0; i<input_vec.size(); i++){
+		if(bInsertIndex)
+		{
+			ofs << i;
+			ofs << "\t";
+		}
+		ofs << input_vec[i];
+		if(i!=input_vec.size()-1)
+		{
+			ofs << "\n";
+		}
+	}
+
+	ofs.close();
+	ofs.clear();
+}
+
+
+void FallDetect::storeAngles2D_deq(std::deque< std::deque<double>> input_vec, std::string outputPath_cstr, bool bInsertIndex/*=false*/)
+{
+	std::ofstream ofs;
+	ofs.open(outputPath_cstr);
+
+	for(int i=0; i<input_vec.size(); i++){
+		if(bInsertIndex)
+		{
+			ofs << i;
+			ofs << "\t";
+		}
+		for(int j=0; j<input_vec[i].size(); j++){
+			ofs << input_vec[i][j];
+			ofs << "\t";
+		}
+
+		if(i<input_vec.size()-1)
+		{
+			ofs << std::endl;
+		}
+	}
+
+	ofs.close();
+	ofs.clear();
+}

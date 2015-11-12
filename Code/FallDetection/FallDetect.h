@@ -34,10 +34,10 @@ public:
 	bool checkUsersStatus(double xVal, double yVal, double zVal);//, Timestamp tmpStmp);
 	std::deque<double> calcAll_Offline(std::deque<std::deque<double>> inputData_deq, std::deque<std::deque<double>> inputTime_deq);
 
-	/*std::deque<double> readDataFromFile_1Ddeq(CString filenamePath, bool bPopBackLastCol=true);
-	std::deque<std::deque<double> > readDataFromFile_2Ddeq(CString filenamePath, bool bPopBackLastCol=true);	
-	void storeAngles1D_deq(std::deque<double> input_vec, CString outputPath_cstr, bool bInsertIndex=false);
-	void storeAngles2D_deq(std::deque< std::deque<double>> input_vec, CString outputPath_cstr, bool bInsertIndex=false);*/
+	std::deque<double> readDataFromFile_1Ddeq(std::string filenamePath, bool bPopBackLastCol=true);
+	std::deque<std::deque<double> > readDataFromFile_2Ddeq(std::string filenamePath, bool bPopBackLastCol=true);	
+	void storeAngles1D_deq(std::deque<double> input_vec, std::string outputPath_cstr, bool bInsertIndex=false);
+	void storeAngles2D_deq(std::deque< std::deque<double>> input_vec, std::string outputPath_cstr, bool bInsertIndex=false);
 	std::deque< std::deque<double> > convertRawsToColumns(std::deque< std::deque<double> > inputMatrix_deq);
 
 	bool isMovementUpdated(){return bIsMovementUpdated;};
