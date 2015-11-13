@@ -22,14 +22,14 @@ public:
 	MLPClass();
 	~MLPClass();
 
-	bool checkPattern(std::deque<double> inPattern, double &mlpVal, double threshold=0.75);
+	bool checkPattern(std::deque<double> inPattern, double &mlpVal, double threshold);
 	double openCVMLPTest(std::string inPattern);
 	int performMLPTraining(std::string inputDataFilePath, std::string inputResultDataFilePath, std::string logFilePath);
 
-	double getMean(std::deque<double> sequence);
+	/*double getMean(std::deque<double> sequence);
 	double getVariance(std::deque<double> sequence);
 	double getMinVal(std::deque<double> sequence);
-	double getMaxVal(std::deque<double> sequence);
+	double getMaxVal(std::deque<double> sequence);*/
 
 	bool loadNewMLP(std::string storedMLPPath);
 

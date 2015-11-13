@@ -55,78 +55,78 @@ std::deque< std::deque<double> > MLPClass::convertRawsToColumns(std::deque< std:
 }
 
 
-double MLPClass::getMean(std::deque<double> sequence)
-{
-
-	int seqSize = sequence.size();
-	double mean = 0;
-
-	for(int i=0; i<seqSize; i++)
-	{
-		mean = mean + sequence[i];
-	}
-
-	mean = mean/seqSize;
-
-	return mean;
-}
-
-
-double MLPClass::getVariance(std::deque<double> sequence)
-{
-	double var = 0;
-	double sum = 0;
-
-	double mean = getMean(sequence);
-
-	int seqSize = sequence.size();
-	for (int i = 0; i<seqSize; i++){
-		sum = sum + (sequence[i] - mean)*(sequence[i] - mean);
-	}
-
-	var = sum/seqSize;
-	return var;
-}
-
-
-double MLPClass::getMinVal(std::deque<double> sequence)
-{
-	int seqSize = sequence.size();
-	if(seqSize==0)
-	{
-		return 0.0;
-	}
-
-	double minVal = sequence[0];
-
-	for (int i = 0; i<sequence.size(); i++)
-	{
-		if(minVal>sequence[i])
-		{
-			minVal = sequence[i];
-		}
-	}
-}
-
-
-double MLPClass::getMaxVal(std::deque<double> sequence)
-{
-	int seqSize = sequence.size();
-	if(seqSize==0)
-	{
-		return 0.0;
-	}
-
-	double maxVal = sequence[0];
-
-	for (int i = 0; i<sequence.size(); i++)
-	{
-		if(maxVal<sequence[i])
-		{
-			maxVal = sequence[i];
-		}
-	}
-}
+//double MLPClass::getMean(std::deque<double> sequence)
+//{
+//
+//	int seqSize = sequence.size();
+//	double mean = 0;
+//
+//	for(int i=0; i<seqSize; i++)
+//	{
+//		mean = mean + sequence[i];
+//	}
+//
+//	mean = mean/seqSize;
+//
+//	return mean;
+//}
+//
+//
+//double MLPClass::getVariance(std::deque<double> sequence)
+//{
+//	double var = 0;
+//	double sum = 0;
+//
+//	double mean = getMean(sequence);
+//
+//	int seqSize = sequence.size();
+//	for (int i = 0; i<seqSize; i++){
+//		sum = sum + (sequence[i] - mean)*(sequence[i] - mean);
+//	}
+//
+//	var = sum/seqSize;
+//	return var;
+//}
+//
+//
+//double MLPClass::getMinVal(std::deque<double> sequence)
+//{
+//	int seqSize = sequence.size();
+//	if(seqSize==0)
+//	{
+//		return 0.0;
+//	}
+//
+//	double minVal = sequence[0];
+//
+//	for (int i = 0; i<sequence.size(); i++)
+//	{
+//		if(minVal>sequence[i])
+//		{
+//			minVal = sequence[i];
+//		}
+//	}
+//}
+//
+//
+//double MLPClass::getMaxVal(std::deque<double> sequence)
+//{
+//	int seqSize = sequence.size();
+//	if(seqSize==0)
+//	{
+//		return 0.0;
+//	}
+//
+//	double maxVal = sequence[0];
+//
+//	for (int i = 0; i<sequence.size(); i++)
+//	{
+//		if(maxVal<sequence[i])
+//		{
+//			maxVal = sequence[i];
+//		}
+//	}
+//}
 
 
 std::deque<double> MLPClass::readDataFromFile_1Ddeq(std::string filenamePath, bool bPopBackLastCol/*=true*/)
@@ -273,7 +273,7 @@ double MLPClass::openCVMLPTest(std::string inPattern)
 }
 
 
-bool MLPClass::checkPattern(std::deque<double> inPattern, double &mlpVal, double threshold/*=0.75*/)
+bool MLPClass::checkPattern(std::deque<double> inPattern, double &mlpVal, double threshold)
 {
 	USES_CONVERSION;
 
