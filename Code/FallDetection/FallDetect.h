@@ -42,9 +42,6 @@ public:
 	std::deque< std::deque<double> > convertRawsToColumns(std::deque< std::deque<double> > inputMatrix_deq);
 
 	bool isMovementUpdated(){return bIsMovementUpdated;};
-	bool isVectorsAreUpdated(){return m_bVectorsAreUpdated;};
-	void setVectorsAreUpdated() {m_bVectorsAreUpdated = true;};
-
 	
 	std::deque<double> getMovement_deq() {return m_movement_deq;};
 

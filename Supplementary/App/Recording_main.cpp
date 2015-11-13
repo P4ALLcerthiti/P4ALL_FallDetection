@@ -58,7 +58,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 			bool bHasFallen = m_fDetection->checkUsersStatus(m_pPhidgetSensor2->past_sampleX,m_pPhidgetSensor2->past_sampleY,m_pPhidgetSensor2->past_sampleZ, systemTime());
 
-			if(m_fDetection->isVectorsAreUpdated() /*&& pointer->m_bNewValues*/)
+			if(m_fDetection->m_bVectorsAreUpdated)
 			{
 				tmpstmp = m_fDetection->getTimestamp();
 
