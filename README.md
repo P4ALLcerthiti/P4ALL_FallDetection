@@ -1,5 +1,6 @@
 # P4A - FallDetection
-A module that detects falls.
+A module that detects falls (and/or potentially other human locomotion activities) based on the activity-related recordings of accelerometers.
+The core algorithm of the module has been built upon a neuro-fuzzy approach.
 
 The repository contains the below directories:
 
