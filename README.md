@@ -48,13 +48,13 @@ At the FallDetectionDLL’s properties:
 
 ###1. Debug:
 	
-	*1. General*
+	1. General
 	
 	Configuration Properties -> General -> Target Name 
 	
 	Set Target Name: $(ProjectName)d
 	
-	*2. C/C++*
+	2. C/C++
 
 		1.Configuration Properties -> C/C++ -> General -> Additional Include Directories 
 		Set the Additional Include Directories:
@@ -65,7 +65,7 @@ At the FallDetectionDLL’s properties:
 		3. Configuration Properties -> C/C++ -> Code Generation -> Runtime Library
 		Select: Multi-threaded DLL (/MD)
 
-	*3. Linker*
+	3. Linker
 		1. Configuration Properties -> Linker -> General -> Output File  
 		Set Output File: $(OutDir)$(ProjectName)d.dll
 		2. Configuration Properties -> Linker -> General -> Additional Library Directories
@@ -77,11 +77,11 @@ At the FallDetectionDLL’s properties:
 
 ###2. Release:
 
-	*1 General*
+	1 General
 	Configuration Properties -> General -> Use of MFC
 	Set Use of MFC: Use MFC in a Shared DLL
 	
-	*2 C/C++*	
+	2 C/C++
 		1. Configuration Properties -> C/C++ -> General -> Additional Include Directories 
 		Set the Additional Include Directories:
 		.\;.\..\CommonFiles\include\AlgLib;.\..\CommonFiles\include\GMMs;.\..\CommonFiles\include\FuzzyLite;.\..\CommonFiles\include\PhidgetSensor;.\..\CommonFiles\include\TimeStamping;.\..\Libs\PhidgetSensors\Include;.\..\Libs\OpenCV\Include;.\..\Libs\OpenCV\Include\opencv2;%(AdditionalIncludeDirectories)
@@ -91,7 +91,7 @@ At the FallDetectionDLL’s properties:
 		3. Configuration Properties -> C/C++ -> Code Generation -> Runtime Library
 		Select: Multi-threaded DLL (/MD)
 		
-	*3 Linker*
+	3 Linker
 		1. Configuration Properties -> Linker -> General -> Output File  
 		Set Output File: $(OutDir)$(ProjectName).dll	
 		2. Configuration Properties -> Linker -> General -> Additional Library Directories	
@@ -105,12 +105,12 @@ At the FallDetectionDLL’s properties:
 
 ###1. Debug
 
-	*1. C/C++*
+	1. C/C++
 		1. Configuration Properties -> C/C++ -> General -> Additional Include Directories 
 		Set the Additional Include Directories:
 		.\..\Test;.\..\Libs\Boost\include;.\..\Libs\OpenCV\Include;.\..\Libs\PhidgetSensors\Include;.\..\CommonFiles\include\GMMs;.\..\CommonFiles\include;.\..\CommonFiles\include\FuzzyLite;.\..\CommonFiles\include\PhidgetSensor;.\..\CommonFiles\include\TimeStamping;.\..\FallDetectionDLL;%(AdditionalIncludeDirectories)
 	
-	*2. Linker*
+	2. Linker
 		1. Configuration Properties -> Linker -> General -> Additional Library Directories
 		Set the Additional Library Directories:
 		.\..\$(ConfigurationName);.\..\Libs\PhidgetSensors;.\..\Libs\Boost\lib;.\..\Libs\OpenCV\$(ConfigurationName);%(AdditionalLibraryDirectories)
@@ -118,7 +118,7 @@ At the FallDetectionDLL’s properties:
 		Set the Additional Directories:
 		opencv_haartraining_engine.lib;opencv_core220d.lib;opencv_ml220d.lib;phidget21.lib;FallDetectionDLLd.lib;libboost_filesystem-vc100-mt-gd-1_49.lib;%(AdditionalDependencies)
 	
-	*3. Build Events*
+	3. Build Events
 	
 		Configuration Properties -> Build Events -> Post-Build Event -> Command Line
 		Set the Command Line:
