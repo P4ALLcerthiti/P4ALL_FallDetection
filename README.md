@@ -8,7 +8,7 @@ The repository contains the below directories:
 2. [Supplementary] (https://github.com/P4ALLcerthiti/P4ALL_FallDetection/tree/master/Supplementary) : 
 	1. [App] (https://github.com/P4ALLcerthiti/P4ALL_FallDetection/tree/master/Supplementary/App): This includes the source code of three sample application that uses the FallDetection Module.
 	2. [Supplementary Files] (https://github.com/P4ALLcerthiti/P4ALL_FallDetection/tree/master/Supplementary/Supplementary_Files) : Contains the examples files allTrainingData.txt, allTrainingDataResults.txt, which are necessary for training the neural network. This directory, also, contains an example of the signature (multilayerPerceptron.dat) produced after training the neural network.
-	3. [API Documentation] (https://github.com/P4ALLcerthiti/P4ALL_FallDetection/tree/master/API_Documentation): This incudes a documentation of the dll’s public variables and functions which are available to the user. 
+3. [API Documentation] (https://github.com/P4ALLcerthiti/P4ALL_FallDetection/tree/master/API%20Documentation): This incudes a documentation of the dll’s public variables and functions which are available to the user.   
 # Dependencies
 
 The following libraries were used to build and test the module. Older subversions may also be compatible
