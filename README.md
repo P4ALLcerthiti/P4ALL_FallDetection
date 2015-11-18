@@ -23,23 +23,23 @@ In order to use Fall Detection module, in visual studio, you may follow the foll
 
 ## Step 1: Create a new project
 
-File -> New -> Project -> Win32 Console Application (Name : Test)
+File -> New -> Project -> Win32 Console Application (Name : Test)  
 Check: Console application and Precompiled header
 
 ## Step 2: Create a new project for DLL
-Add -> New Project -> Win32 Console Application (Name: FallDetectionDLL)
+Add -> New Project -> Win32 Console Application (Name: FallDetectionDLL)  
 Check: DLL and MFC	
 
 ## Step 3: Add the code
-Copy and paste the [CommonFiles] (https://github.com/P4ALLcerthiti/P4ALL_FallDetection/tree/master/Code) directory into the project directory. 
-Create a new folder (ex Libs) and place into this folder the libs.
-Copy and paste the files from [FallDetection] (https://github.com/P4ALLcerthiti/P4ALL_FallDetection/tree/master/Code) directory into the Dll’s directory (FallDetectionDLL).
-Copy and paste the files from [App] (https://github.com/P4ALLcerthiti/P4ALL_FallDetection/tree/master/Supplementary) directory into the project’s code directory (Test).
-At FallDetectionDLL project select Add -> Existing Item and add the .h and .cpp files placed at the FallDtectionDLL, FuzzyLite, GMMs, Timestamping directories.
-At Test project select Add-> Existing Item and add the .h and .cpp files placed at the Test and the Timestamping directories.
+Copy and paste the [CommonFiles] (https://github.com/P4ALLcerthiti/P4ALL_FallDetection/tree/master/Code) directory into the project directory.  
+Create a new folder (ex Libs) and place into this folder the libs.  
+Copy and paste the files from [FallDetection] (https://github.com/P4ALLcerthiti/P4ALL_FallDetection/tree/master/Code) directory into the Dll’s directory (FallDetectionDLL).  
+Copy and paste the files from [App] (https://github.com/P4ALLcerthiti/P4ALL_FallDetection/tree/master/Supplementary) directory into the project’s code directory (Test).  
+At FallDetectionDLL project select Add -> Existing Item and add the .h and .cpp files placed at the FallDtectionDLL, FuzzyLite, GMMs, Timestamping directories.  
+At Test project select Add-> Existing Item and add the .h and .cpp files placed at the Test and the Timestamping directories.  
 
 ## Step 4: Set the solution’s properties
-At the Solution’s properties : Common Properties -> Project Dependencies  
+At the Solution’s properties : Common Properties -> Project Dependencies    
 Select: Test Depends on FallDetectionDLL.
 
 ## Step 5: Set the Dll’s properties 
