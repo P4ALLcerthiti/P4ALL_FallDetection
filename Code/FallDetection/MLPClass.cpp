@@ -420,7 +420,7 @@ bool MLPClass::loadNewMLP(std::string storedMLPPath)
 
 	std::string initializationData_cstr;
 	initializationData_cstr = storedMLPPath;
-	initializationData_cstr.append(FILENAME_MULTILAYERPERCEPTRON_DAT);
+	//initializationData_cstr.append(FILENAME_MULTILAYERPERCEPTRON_DAT);
 
 	m_openCV_MLP->load(initializationData_cstr.c_str());
 

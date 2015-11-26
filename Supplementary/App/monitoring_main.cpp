@@ -5,6 +5,7 @@
 #include "MLPClass.h"
 #include <deque>
 #include <timestamp.hpp>
+#include "io.h"
 
 const double SENSITIVITY_VAL = 0.1;
 
@@ -14,9 +15,29 @@ int _tmain(int argc, _TCHAR* argv[])
 	FallDetect* m_fDetection = new FallDetect();
 	PhidgetSensorEventDetection* m_pPhidgetSensor2 = new PhidgetSensorEventDetection();
 	
-	std::string storedMLPPath = "C:\\MLP\\";
+	std::string storedMLPPath = "C:\\MLP\\multilayerPerceptron.dat";
 
+	if(_access(storedMLPPath.c_str(),0)==-1)
+	{
+		cout << "WARNING: No MLP signature file detected! Please give a valid path." << "\n" ;
+		return -1;
+	}
 
+	ifstream inFile(storedMLPPath);	
+	if ( inFile.is_open() ){
+        if ( inFile.peek() == std::ifstream::traits_type::eof() )
+        {
+            cout << "WARNING: Empty file " << storedMLPPath << "\n";
+			inFile.close();
+            return -1;
+
+        }
+		else
+		{
+			inFile.close();
+		}
+	}
+	
 	bool retVal = m_pPhidgetSensor2->initializePhidget(SENSITIVITY_VAL);
 
 	if(retVal)
