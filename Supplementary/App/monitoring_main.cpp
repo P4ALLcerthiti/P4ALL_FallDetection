@@ -15,7 +15,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	FallDetect* m_fDetection = new FallDetect();
 	PhidgetSensorEventDetection* m_pPhidgetSensor2 = new PhidgetSensorEventDetection();
 	
-	std::string storedMLPPath = "C:\\MLP\\multilayerPerceptron.dat";
+	std::string storedMLPPath = ".\\..\\MLP\\multilayerPerceptron.dat";
 
 	if(_access(storedMLPPath.c_str(),0)==-1)
 	{

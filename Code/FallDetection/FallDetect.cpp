@@ -69,6 +69,7 @@ FallDetect::FallDetect()
 	m_sma = 0;
 	m_sma_deq.resize(ACCELEROMETER_SAMPLES_FOR_SMA);
 	m_smaBuffer_deq.resize(0.8*ACCELEROMETERS_SMOOTHING_WINDOW);
+	m_movement_deq_smoother.resize(ceil( (double) (ACCELEROMETERS_SMOOTHING_WINDOW/2) ) );
 
 	m_internalCounter = 0;
 	m_intCounter = 0;
@@ -189,6 +190,8 @@ FallDetect::~FallDetect()
 	m_smaBuffer_deq.clear();
 	m_sma_secondBuffer_deq.clear();
 	m_dSma_secondBuffer = 0.0;
+
+	m_movement_deq_smoother.clear();
 
 	m_counter = 0;
 	m_intCounter = 0;
@@ -890,22 +893,17 @@ bool FallDetect::calcAll(double xVal, double yVal, double zVal, Timestamp tmpStm
 
 		if(!isIndeterminate(m_current_fis))
 		{
-			m_movement_deq.push_back(m_current_fis);
-			m_movement_deq.pop_front();
 		}
 		else
 		{
-			m_movement_deq.push_back(0);
-			m_movement_deq.pop_front();
+			m_movement_deq_smoother.push_back(0);
+			m_movement_deq_smoother.pop_front();
 		}
+
+		m_movement_deq.push_back(getMean(m_movement_deq_smoother)); 
+		m_movement_deq.pop_front();
 
 		bIsMovementUpdated = true;
-
-		if(ENABLE_MLP_FUNCTION)
-		{
-			//m_mlpOutput_deq.push_back(m_mlp->calculate_output());
-			//m_mlpOutput_deq.push_front();
-		}
 	}
 
 	if(m_intCounter>=ACCELEROMETER_FREQUENCY)

@@ -235,42 +235,42 @@ void MLPClass::storeAngles2D_deq(std::deque< std::deque<double>> input_vec, std:
 }
 
 
-double MLPClass::openCVMLPTest(std::string inPattern)
-{
-	USES_CONVERSION;
-
-	char msgBuf[MAX_PATH];
-	std::string msgStr;
-
-	if(m_openCV_MLP==NULL)
-	{
-		return -1.0;
-	}
-
-	std::deque<double> testPattern_deq = readDataFromFile_1Ddeq(inPattern);
-	
-	float _testSample[MLP_NO_OF_INPUT_LAYERS];
-	CvMat testSample_mat = cvMat(1, MLP_NO_OF_INPUT_LAYERS, CV_32FC1, _testSample);
-	float _classificationResult[MLP_NO_OF_OUTPUT_LAYERS];
-	CvMat classificationResult_mat = cvMat(1, MLP_NO_OF_OUTPUT_LAYERS, CV_32FC1, _classificationResult);
-
-	if(testPattern_deq.size()!=MLP_NO_OF_INPUT_LAYERS)
-	{
-		testPattern_deq.clear();
-		return -1;
-	}
-
-	for(int i=0; i<MLP_NO_OF_INPUT_LAYERS; i++)
-	{
-		testSample_mat.data.fl[i] = testPattern_deq[i];
-	}
-	testPattern_deq.clear();
-
-	m_openCV_MLP->predict(&testSample_mat, &classificationResult_mat);		// run neural network prediction
-	double testVal = classificationResult_mat.data.fl[0];
-
-	return testVal;
-}
+//double MLPClass::openCVMLPTest(std::string inPattern)
+//{
+//	USES_CONVERSION;
+//
+//	char msgBuf[MAX_PATH];
+//	std::string msgStr;
+//
+//	if(m_openCV_MLP==NULL)
+//	{
+//		return -1.0;
+//	}
+//
+//	std::deque<double> testPattern_deq = readDataFromFile_1Ddeq(inPattern);
+//	
+//	float _testSample[MLP_NO_OF_INPUT_LAYERS];
+//	CvMat testSample_mat = cvMat(1, MLP_NO_OF_INPUT_LAYERS, CV_32FC1, _testSample);
+//	float _classificationResult[MLP_NO_OF_OUTPUT_LAYERS];
+//	CvMat classificationResult_mat = cvMat(1, MLP_NO_OF_OUTPUT_LAYERS, CV_32FC1, _classificationResult);
+//
+//	if(testPattern_deq.size()!=MLP_NO_OF_INPUT_LAYERS)
+//	{
+//		testPattern_deq.clear();
+//		return -1;
+//	}
+//
+//	for(int i=0; i<MLP_NO_OF_INPUT_LAYERS; i++)
+//	{
+//		testSample_mat.data.fl[i] = testPattern_deq[i];
+//	}
+//	testPattern_deq.clear();
+//
+//	m_openCV_MLP->predict(&testSample_mat, &classificationResult_mat);		// run neural network prediction
+//	double testVal = classificationResult_mat.data.fl[0];
+//
+//	return testVal;
+//}
 
 
 bool MLPClass::checkPattern(std::deque<double> inPattern, double &mlpVal, double threshold)

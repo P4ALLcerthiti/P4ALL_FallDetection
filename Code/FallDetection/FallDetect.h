@@ -174,6 +174,7 @@ private:
 	std::deque<double> m_sma_secondBuffer_deq;
 	double m_dSma_secondBuffer;
 
+	std::deque<double> m_movement_deq_smoother;
 	std::deque<double> m_movement_deq;
 	std::deque<int> m_finalMLP_decision_deq;
 	//Flood::Vector<double> m_mlpOutput_deq;

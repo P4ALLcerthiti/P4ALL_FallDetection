@@ -23,7 +23,7 @@ public:
 	~MLPClass();
 
 	bool checkPattern(std::deque<double> inPattern, double &mlpVal, double threshold);
-	double openCVMLPTest(std::string inPattern);
+	//double openCVMLPTest(std::string inPattern);
 	int performMLPTraining(std::string inputDataFilePath, std::string inputResultDataFilePath, std::string logFilePath);
 
 	/*double getMean(std::deque<double> sequence);

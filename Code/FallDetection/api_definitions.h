@@ -94,9 +94,9 @@
 #define MLP_FIRST_LAYER_NEURONS							30
 #define MLP_SECOND_LAYER_NEURONS						20
 
-#define MLP_THRESHOLD_VAL								1.00
+#define MLP_THRESHOLD_VAL								0.85
 #define MLP_DECISIONS_SIZE								120
-#define MLP_DCISIONS_THRESHOLD_VAL						50
+#define MLP_DCISIONS_THRESHOLD_VAL						60
 
 
 
