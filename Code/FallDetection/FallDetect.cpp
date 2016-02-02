@@ -893,6 +893,8 @@ bool FallDetect::calcAll(double xVal, double yVal, double zVal, Timestamp tmpStm
 
 		if(!isIndeterminate(m_current_fis))
 		{
+			m_movement_deq_smoother.push_back(m_current_fis);
+			m_movement_deq_smoother.pop_front();
 		}
 		else
 		{
